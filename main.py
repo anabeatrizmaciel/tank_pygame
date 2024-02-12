@@ -1,51 +1,56 @@
 from game import Game
+from tank import Tank
+import pygame
+import sys
 
 def main():
-    game_instance = Game()
+    pygame.init()  #Inicialização do módulo pygame
+    game_instance = Game()  #instância da classe Game
 
-    while True:
-        game_instance.battlefield.draw_field(game_instance.tank1_x, game_instance.tank1_y,
-                                             game_instance.tank2_x, game_instance.tank2_y,
-                                             game_instance.bullets)
+    tela_largura = 800  #largura da tela
+    tela_altura = 600  #altura da tela
+    tela = pygame.display.set_mode((tela_largura, tela_altura))#janela do jogo com as dimensões especificadas
+    PRETO = (0, 0, 0)
+    VERDE = (0, 255, 0)
+    VERMELHO = (255, 0, 0)
+    AZUL = (0, 0, 255)
+    AMARELO = (255, 255, 0)
 
-        action1 = input("Player 1 - Choose an action (w, a, s, d to move, t to shoot): ")
-        action2 = input("Player 2 - Choose an action (w, a, s, d to move, t to shoot): ")
+    # Criação de dois objetos do tipo Tank (os tanques do jogo)
+    tanque1 = Tank(VERDE, 150, tela_altura // 3, {'teclas': {'cima': pygame.K_w, 'baixo': pygame.K_s, 'esquerda': pygame.K_a, 'direita': pygame.K_d}})
+    tanque2 = Tank(VERMELHO, tela_largura - 150, tela_altura // 3, {'teclas': {'cima': pygame.K_UP, 'baixo': pygame.K_DOWN, 'esquerda': pygame.K_LEFT, 'direita': pygame.K_RIGHT}})
 
-        # Process tank movements and shooting
-        if action1 == "w" and game_instance.tank1_y > 0:
-            game_instance.tank1_y -= 1
-        elif action1 == "s" and game_instance.tank1_y < game_instance.battlefield.height - 1:
-            game_instance.tank1_y += 1
-        elif action1 == "a" and game_instance.tank1_x > 0:
-            game_instance.tank1_x -= 1
-        elif action1 == "d" and game_instance.tank1_x < game_instance.battlefield.width // 2 - 1:
-            game_instance.tank1_x += 1
-        elif action1 == "t":
-            game_instance.shoot(game_instance.tank1_x, game_instance.tank1_y, "d")
+    todos_sprites = pygame.sprite.Group() #Criação de um grupo de sprites para todos os objetos do jogo
+    todos_sprites.add(tanque1, tanque2)#Adiciona os tanques criados ao grupo de sprites
 
-        if action2 == "w" and game_instance.tank2_y > 0:
-            game_instance.tank2_y -= 1
-        elif action2 == "s" and game_instance.tank2_y < game_instance.battlefield.height - 1:
-            game_instance.tank2_y += 1
-        elif action2 == "a" and game_instance.tank2_x > game_instance.battlefield.width // 2:
-            game_instance.tank2_x -= 1
-        elif action2 == "d" and game_instance.tank2_x < game_instance.battlefield.width - 1:
-            game_instance.tank2_x += 1
-        elif action2 == "t":
-            game_instance.shoot(game_instance.tank2_x, game_instance.tank2_y, "a")
+    # Inicialização de joysticks
+    pygame.joystick.init()
+    if pygame.joystick.get_count() >= 1:  # Se houver pelo menos um joystick conectado
+        joystick1 = pygame.joystick.Joystick(0)#Cria um objeto joystick para o primeiro joystick conectado
+        joystick1.init()#Inicializa o primeiro joystick
+        tanque3_joystick1 = Tank(AZUL, 150, 2 * tela_altura // 3, {'joystick': joystick1})  # Cria um tanque associado ao primeiro joystick
+        todos_sprites.add(tanque3_joystick1)#Adiciona o tanque associado ao joystick ao grupo de sprites
 
-        # Bullet movement and removal logic
-        game_instance.move_bullets()
+    if pygame.joystick.get_count() >= 2:  # Se houver pelo menos dois joysticks conectados
+        joystick2 = pygame.joystick.Joystick(1)
+        joystick2.init()
+        tanque4_joystick2 = Tank(AMARELO, tela_largura - 150, 2 * tela_altura // 3, {'joystick': joystick2})
+        todos_sprites.add(tanque4_joystick2)
 
-        # Check for winner
-        if game_instance.score_tank1 >= 3 or game_instance.score_tank2 >= 3:
-            print("Game Over!")
-            if game_instance.score_tank1 >= 3:
-                print("Player 1 wins!")
-            else:
-                print("Player 2 wins!")
-            break
+    while True:  # Loop principal do jogo
+        for evento in pygame.event.get():#Itera sobre todos os eventos do pygame
+            if evento.type == pygame.QUIT:#Verifica se o evento é um pedido de sair do jogo
+                pygame.quit() #Encerra os módulos do pygame corretamente.
+                sys.exit()#Encerra o programa
+
+        todos_sprites.update()#Atualiza todos os sprites do jogo
+
+        tela.fill(PRETO)#Preenche a tela com a cor preta
+        todos_sprites.draw(tela)#Desenha todos os sprites na tela
+
+        pygame.display.flip()#Atualiza a tela visível para o usuário
+
+        pygame.time.Clock().tick(60)#Limita ritmo de execução do jogo a 60 quadros por segundo
 
 if __name__ == "__main__":
-    main()
-
+    main()#Chama a função principal do programa
