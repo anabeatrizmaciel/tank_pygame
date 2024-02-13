@@ -11,8 +11,14 @@ class Tank(pygame.sprite.Sprite):#classe Tank herda de pygame.sprite.Sprite
         self.teclas_controle = controles.get('teclas', None)#Dicionário das teclas de controle
         self.joystick = controles.get('joystick', None)#Joystick associado (pode nao ter nenhum None)
         self.velocidade = 5#Velocidade de movimento do tanque
+        self.walls = None  # Inicia sem nenhum grupo de paredes associado
 
     def update(self):#Método para atualizar a posição do tanque
+
+        # Salva a posição antiga para reverter se houver colisão
+        old_x = self.rect.x
+        old_y = self.rect.y
+
         if self.joystick:# Se houver um joystick associado, atualiza com base nele
             joystick_inputs = [self.joystick.get_axis(0), self.joystick.get_axis(1)]#Pega os valores dos eixos do joystick
             self.rect.x += int(joystick_inputs[0] * self.velocidade)#Atualiza a posição do tanque com base nos controles do joystick
@@ -27,3 +33,11 @@ class Tank(pygame.sprite.Sprite):#classe Tank herda de pygame.sprite.Sprite
                 self.rect.y -= self.velocidade#Move o tanque para cima
             if teclas[self.teclas_controle['baixo']]:#Se a tecla baixo estiver pressionada
                 self.rect.y += self.velocidade#Move o tanque para baixo
+
+            #Verifica colisão após mover, revertendo para a posição anterior caso haja colisão
+            if self.walls and pygame.sprite.spritecollideany(self, self.walls):
+                self.rect.x = old_x #Reverte a posição
+                self.rect.y = old_y #Reverte a posição
+
+    def set_walls(self, walls):
+        self.walls = walls #Define o grupo de paredes para verificar colisões

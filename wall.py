@@ -1,17 +1,11 @@
-class Wall:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+import pygame
+from color import Color
 
-    def draw_field(self, tank1_x, tank1_y, tank2_x, tank2_y, bullets):
-        for y in range(self.height):
-            for x in range(self.width):
-                if x == tank1_x and y == tank1_y:
-                    print("T1", end='')
-                elif x == tank2_x and y == tank2_y:
-                    print("T2", end='')
-                elif any(b.x == x and b.y == y for b in bullets):
-                    print("B", end='')  # Bullet indicator
-                else:
-                    print(".", end='')
-            print()
+class Wall(pygame.sprite.Sprite):
+    def __init__(self, x, y, largura, altura, wall_color):
+        super().__init__() #Herda da classe pygame.sprite.Sprite para que possa ser tratada como um sprite
+        #self.colors = colors #Instância da classe Color
+        self.image = pygame.Surface((largura, altura))#Cria a imagem (surpeficie) da parede
+        self.image.fill(wall_color)  # Preenche a superfície com a cor escolhida para a parede
+ #Escolhe uma cor aleatória da instância de Color
+        self.rect = self.image.get_rect(topleft = (x, y)) #Obtém um retângulo que representa a posição e o tamanho da parede na tela
