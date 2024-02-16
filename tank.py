@@ -1,43 +1,69 @@
 import pygame
+from bullet import Bullet
+from color import Color
 
-# Define os tanques
-class Tank(pygame.sprite.Sprite):#classe Tank herda de pygame.sprite.Sprite
-    def __init__(self, cor, pos_x, pos_y, controles):#Inicialização da classe
-        super().__init__()#Inicializa a classe pai pygame.sprite.Sprite
+class Tank(pygame.sprite.Sprite):
+    def __init__(self, color, x, y, id, controls, bullets, screen_width, screen_height, walls=None):
+        super().__init__()
+        self.image = pygame.Surface((30, 30))
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.velocidade = 5
+        self.id = id
+        self.teclas_controle = controls.get('teclas')
+        self.joystick = None
+        self.bullets = bullets
+        self.walls = walls  #armazenar as paredes do labirinto
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        #self.enemy_tanks = enemy_tanks  #tanques adversários
 
-        self.image = pygame.Surface((50, 30))#Cria uma superfície para representar a imagem do tanque - Surface (Largura, Altura)
-        self.image.fill(cor)#Preenche a superfície com a cor especificada
-        self.rect = self.image.get_rect(center=(pos_x, pos_y))#Obtém um retângulo que representa a posição do tanque na tela
-        self.teclas_controle = controles.get('teclas', None)#Dicionário das teclas de controle
-        self.joystick = controles.get('joystick', None)#Joystick associado (pode nao ter nenhum None)
-        self.velocidade = 5#Velocidade de movimento do tanque
-        self.walls = None  # Inicia sem nenhum grupo de paredes associado
+    def set_walls(self, walls):
+        self.walls = walls
 
-    def update(self):#Método para atualizar a posição do tanque
+    def track_controls(self, keys):
+        if keys[self.teclas_controle['cima']]:
+            self.rect.y -= self.velocidade
+            self.direction = "up"
+        if keys[self.teclas_controle['baixo']]:
+            self.rect.y += self.velocidade
+            self.direction = "down"
+        if keys[self.teclas_controle['esquerda']]:
+            self.rect.x -= self.velocidade
+            self.direction = "left"
+        if keys[self.teclas_controle['direita']]:
+            self.rect.x += self.velocidade
+            self.direction = "right"
 
-        # Salva a posição antiga para reverter se houver colisão
+    def fire_bullet(self, direction):
+        print(f"Tanque {self.id} disparando bala na direção {direction}!")
+        bullet_color = (255, 0, 0) if self.id == 1 else (0, 255, 0)  # Exemplo de cor diferente por tanque
+        bullet = Bullet(self.rect.centerx, self.rect.centery, direction, bullet_color, self.screen_width,
+                        self.screen_height, self.walls)  # Passa as paredes para a bala
+        self.bullets.add(bullet)  #Adiciona a bala ao grupo de balas
+
+    def update(self):
         old_x = self.rect.x
         old_y = self.rect.y
 
-        if self.joystick:# Se houver um joystick associado, atualiza com base nele
-            joystick_inputs = [self.joystick.get_axis(0), self.joystick.get_axis(1)]#Pega os valores dos eixos do joystick
-            self.rect.x += int(joystick_inputs[0] * self.velocidade)#Atualiza a posição do tanque com base nos controles do joystick
-            self.rect.y += int(joystick_inputs[1] * self.velocidade)
-        elif self.teclas_controle:#Senão, atualiza com base nas teclas
-            teclas = pygame.key.get_pressed()#Pega o estado das teclas pressionadas
-            if teclas[self.teclas_controle['esquerda']]:#Se a tecla esquerda estiver pressionada
-                self.rect.x -= self.velocidade#Move o tanque para a esquerda
-            if teclas[self.teclas_controle['direita']]:#Se a tecla direita estiver pressionada
-                self.rect.x += self.velocidade#Move o tanque para a direita
-            if teclas[self.teclas_controle['cima']]:#Se a tecla cima estiver pressionada
-                self.rect.y -= self.velocidade#Move o tanque para cima
-            if teclas[self.teclas_controle['baixo']]:#Se a tecla baixo estiver pressionada
-                self.rect.y += self.velocidade#Move o tanque para baixo
+        if self.joystick:
+            joystick = self.joystick
+            x_axis = joystick.get_axis(0)
+            y_axis = joystick.get_axis(1)
+            self.rect.x += int(x_axis * self.velocidade)
+            self.rect.y += int(y_axis * self.velocidade)
 
-            #Verifica colisão após mover, revertendo para a posição anterior caso haja colisão
+            if joystick.get_button(0):  # Verifica se o botão do joystick foi pressionado
+                self.fire_bullet(self.direction)  # Passando a direção atual para a bala
+
+        elif self.teclas_controle:
+            keys = pygame.key.get_pressed()
+            self.track_controls(keys)
+
             if self.walls and pygame.sprite.spritecollideany(self, self.walls):
-                self.rect.x = old_x #Reverte a posição
-                self.rect.y = old_y #Reverte a posição
+                self.rect.x = old_x
+                self.rect.y = old_y
 
-    def set_walls(self, walls):
-        self.walls = walls #Define o grupo de paredes para verificar colisões
+        for bullet in self.bullets:  # Itera sobre cada bala
+            bullet.update()  # Atualiza a bala
