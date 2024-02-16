@@ -5,7 +5,7 @@ class Bonus(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.Surface((20, 20))  # Tamanho do bônus
-        self.image.fill((0, 255, 0))  # Cor do bônus (verde neste exemplo)
+        self.image.fill((239, 84, 16))  # Cor do bônus (dourado)
         self.rect = self.image.get_rect()
         self.rect.x = 0  # A posição x será definida posteriormente
         self.rect.y = 0  # A posição y será definida posteriormente

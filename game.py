@@ -4,6 +4,7 @@ from tank import Tank
 from maze import Maze
 from color import Color
 from list import labirinto_escolhido
+from bonus import Bonus  # Importe a classe Bonus
 
 class Game:
     def __init__(self):
@@ -58,6 +59,15 @@ class Game:
         pygame.font.init()
         self.font = pygame.font.SysFont('Arial', 24)
 
+        # Inicialize o grupo de sprites para os bônus
+        self.bonuses = pygame.sprite.Group()
+        self.next_bonus_time = pygame.time.get_ticks() + 30000  # Tempo em milissegundos para o próximo bônus (30 segundos)
+
+    def generate_bonus(self):
+        bonus = Bonus()
+        bonus.generate_position(self.tela.get_width(), self.tela.get_height(), self.maze.walls)
+        self.bonuses.add(bonus)
+
     def draw_score(self):
         y_offset = 10
         for tanque in [self.tanque1, self.tanque2, self.tanque3_joystick1, self.tanque4_joystick2]:
@@ -89,6 +99,14 @@ class Game:
 
     def run(self):
         while True:
+            current_time = pygame.time.get_ticks()
+
+            # Se o tempo atual for maior ou igual ao tempo para o próximo bônus, gere um novo bônus
+            if current_time >= self.next_bonus_time:
+                self.generate_bonus()
+                # Defina o próximo tempo de bônus para daqui a 30 segundos
+                self.next_bonus_time = current_time + 30000
+
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
                     pygame.quit()
@@ -109,6 +127,12 @@ class Game:
             self.bullets.update()
             self.todos_sprites.update()
 
+            # Verifica colisões entre cada tanque e o grupo de bônus
+            bonus_collisions = pygame.sprite.groupcollide(self.bonuses, self.todos_sprites, True, False)
+            for bonus, tanks in bonus_collisions.items():
+                for tank in tanks:
+                    tank.increment_lives()  # Incrementa a vida de cada tanque que colidiu com o bônus
+
             winner_id = self.check_winner()
             if winner_id is not None:
                 self.show_winner_screen(winner_id)
@@ -118,8 +142,11 @@ class Game:
             self.maze.draw(self.tela)
             self.bullets.draw(self.tela)
             self.todos_sprites.draw(self.tela)
+            self.bonuses.draw(self.tela)  # Desenhe os bônus na tela
             self.draw_score()
 
             pygame.display.flip()
             pygame.time.Clock().tick(60)
 
+game = Game()
+game.run()

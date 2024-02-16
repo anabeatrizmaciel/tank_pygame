@@ -23,6 +23,8 @@ class Tank(pygame.sprite.Sprite):  # Define a classe Tank que herda de pygame.sp
         self.lives = 3  # Inicializa o número de vidas do tanque
         self.hit_counter = 0  # Inicializa o contador de vezes que o tanque foi atingido
 
+    def increment_lives(self):
+        self.lives += 1
     def set_walls(self, walls):
         # Define as paredes do tanque
         self.walls = walls
@@ -91,6 +93,5 @@ class Tank(pygame.sprite.Sprite):  # Define a classe Tank que herda de pygame.sp
             if self.walls and pygame.sprite.spritecollideany(self, self.walls):
                 self.rect.x = old_x
                 self.rect.y = old_y
-
         for bullet in self.bullets:
-            bullet.update()  # Atualiza as balas
+            bullet.update()  #Atualiza as balas
