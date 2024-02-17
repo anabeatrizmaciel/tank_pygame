@@ -13,19 +13,17 @@ class Maze:
         self.walls = pygame.sprite.Group() #Cria um grupo de sprites para armazenar as paredes do labirinto
         self.create_walls_group()  #Chama o método para criar as paredes com base na estrutura do labirinto
 
-
-
     def create_walls_group(self):
         tamanho_celula = 40
-        wall_color = self.colors.random_color_wall()#Escolhe uma cor aleatória para todas as paredes
-        for y, row in enumerate(self.maze_structure): #y retorna o numero do indice linha. ROW é o conteudo da linha
-            for x, cell in enumerate(row):#x retorna o numero do indice coluna. CELL é o conteúdo da coluna x na linha ROW
-                if cell == "#": #verifica se é uma parede.
-                    #pygame.draw.rect(tela,  self.wall_color, (x * tamanho_celula, y * tamanho_celula, tamanho_celula, tamanho_celula))#Desenha um retângulo na tela representando a parede. Conforme a estrutura do labirinto.
-                    wall = Wall(x * tamanho_celula, y * tamanho_celula, tamanho_celula, tamanho_celula,
-                                wall_color) #Cria um sprite de parede na posicao passada
-                    self.walls.add(wall)#Adiciona o sprite de parede ao grupo de paredes
+        tamanho_tijolo = 50
+        brick_image = pygame.image.load("assets/bricks1.png").convert_alpha()
+        brick_image = pygame.transform.scale(brick_image, (tamanho_tijolo, tamanho_tijolo))
 
+        for y, row in enumerate(self.maze_structure):
+            for x, cell in enumerate(row):
+                if cell == "#":
+                    wall = Wall(x * tamanho_celula, y * tamanho_celula * 0.4, brick_image)
+                    self.walls.add(wall)
     def draw(self, tela):
         tela.fill(self.background_color)  # Preenche o fundo com a cor aleatória selecionada
         # cor_parede = self.colors.cor_aleatoria()  # Seleciona uma cor aleatória para as paredes

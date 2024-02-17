@@ -19,13 +19,20 @@ class Game:
 
         self.bullets = pygame.sprite.Group()
 
+        image_path_tanque_1 = "assets/tanque1.png"
+        image_path_tanque_2 = "assets/tanque2.png"
+        image_path_tanque_3 = "assets/tanque3.png"
+        image_path_tanque_4 = "assets/tanque4.png"
+
         self.tanque1 = Tank((255, 255, 255), 150, tela_altura // 3, 1, {
             'teclas': {'cima': pygame.K_w, 'baixo': pygame.K_s, 'esquerda': pygame.K_a, 'direita': pygame.K_d,
-                       'disparar': pygame.K_SPACE}}, self.bullets, tela_largura, tela_altura, self.maze.walls)
+                       'disparar': pygame.K_SPACE}}, self.bullets, tela_largura, tela_altura, self.maze.walls,
+                        image_path_tanque_1)
 
         self.tanque2 = Tank((0, 0, 0), tela_largura - 150, tela_altura // 3, 2, {
             'teclas': {'cima': pygame.K_UP, 'baixo': pygame.K_DOWN, 'esquerda': pygame.K_LEFT, 'direita': pygame.K_RIGHT,
-                       'disparar': pygame.K_RETURN}}, self.bullets, tela_largura, tela_altura, self.maze.walls)
+                       'disparar': pygame.K_RETURN}}, self.bullets, tela_largura, tela_altura, self.maze.walls,
+                        image_path_tanque_2)
 
         self.tanque1.direction = "right"
         self.tanque2.direction = "left"
@@ -43,7 +50,7 @@ class Game:
             joystick1 = pygame.joystick.Joystick(0)
             joystick1.init()
             self.tanque3_joystick1 = Tank(self.color.BLUE, 150, 2 * tela_altura // 3, {'joystick': joystick1},
-                                           self.bullets, tela_largura, tela_altura, self.maze.walls)
+                                           self.bullets, tela_largura, tela_altura, self.maze.walls, image_path_tanque_3)
             self.tanque3_joystick1.set_walls(self.maze.walls)
             self.todos_sprites.add(self.tanque3_joystick1)
 
@@ -51,13 +58,13 @@ class Game:
             joystick2 = pygame.joystick.Joystick(1)
             joystick2.init()
             self.tanque4_joystick2 = Tank(self.color.YELLOW, tela_largura - 150, 2 * tela_altura // 3,
-                                           {'joystick': joystick2}, self.bullets, tela_largura, tela_altura, self.maze.walls,
+                                           {'joystick': joystick2}, self.bullets, tela_largura, tela_altura, self.maze.walls, image_path_tanque_4,
                                            [self.tanque1, self.tanque2, self.tanque3_joystick1 if pygame.joystick.get_count() >= 1 else None])
             self.tanque4_joystick2.set_walls(self.maze.walls)
             self.todos_sprites.add(self.tanque4_joystick2)
 
         pygame.font.init()
-        self.font = pygame.font.SysFont('Arial', 24)
+        self.font = pygame.font.Font('assets/PressStart2P.ttf', 15)
 
         # Inicialize o grupo de sprites para os bônus
         self.bonuses = pygame.sprite.Group()

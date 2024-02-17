@@ -5,11 +5,11 @@ class Color:
     def __init__(self):
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
-        self.RED = (255, 0, 0)
-        self.GREEN = (0, 255, 0)
+        self.RED = (228, 129, 129)
+        self.GREEN = (69, 164, 69)
         self.BLUE = (0, 0, 255)
         self.YELLOW = (255, 255, 0)
-        self.PURPLE = (255, 0, 255)
+        self.PURPLE = (116, 0, 194)
         self.CYAN = (0, 255, 255)
 
     def random_color_wall(self):
