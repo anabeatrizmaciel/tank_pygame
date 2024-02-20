@@ -14,6 +14,8 @@ class Game:
         screen_height = 600
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.color = Color()
+        self.gunshot_sound = pygame.mixer.Sound("assets/sound.mp3")
+
 
         self.maze = Maze(screen_width, screen_height, self.color, selected_maze)
         self.maze.create_walls_group()
@@ -70,6 +72,9 @@ class Game:
         # Initialize sprite group for the bonus
         self.bonuses = pygame.sprite.Group()
         self.next_bonus_time = pygame.time.get_ticks() + 50000  # Time, in milliseconds to the next bonus (30 seconds)
+        self.tank_hit_timer = 0
+        self.tank_hit_duration = 500
+        self.quick_rotate_angle = 0
 
     def generate_bonus(self):
         bonus = Bonus()
@@ -105,6 +110,23 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
+    def rotate_quickly(self, tank):
+        rotated_sprite = pygame.transform.rotate(tank.image, self.quick_rotate_angle)
+        tank.image = rotated_sprite
+
+    def update_tank_hit(self):
+        # Reduza o tempo do efeito de impacto no tanque se estiver ocorrendo
+        if self.tank_hit_timer > 0:
+            elapsed_time = pygame.time.get_ticks() - self.tank_hit_timer
+            if elapsed_time >= self.tank_hit_duration:
+                self.tank_hit_timer = 0
+                self.quick_rotate_angle = 0
+            else:
+                self.quick_rotate_angle += 90  # Ajuste para controlar a velocidade da rotação rápida
+                for tank in [self.tank1, self.tank2, self.tank3_joystick1, self.tank4_joystick2]:
+                    if tank is not None and tank.alive():
+                        self.rotate_quickly(tank)
+
     def run(self):
         while True:
             current_time = pygame.time.get_ticks()
@@ -122,8 +144,10 @@ class Game:
 
                 if evento.type == pygame.KEYDOWN:
                     if evento.key == pygame.K_SPACE:
+                        self.gunshot_sound.play()
                         self.tank1.fire_bullet(self.tank1.direction, [self.tank2, self.tank3_joystick1, self.tank4_joystick2])
                     elif evento.key == pygame.K_RETURN:
+                        self.gunshot_sound.play
                         self.tank2.fire_bullet(self.tank2.direction, [self.tank1, self.tank3_joystick1, self.tank4_joystick2])
 
                 elif evento.type == pygame.JOYBUTTONDOWN:
@@ -152,6 +176,14 @@ class Game:
             self.all_sprites.draw(self.screen)
             self.bonuses.draw(self.screen)  # Draw bonus in the screen
             self.draw_score()
+
+            if self.tank_hit_timer > 0:
+                pygame.draw.rect(self.screen, (255, 255, 255), self.tank1.rect, 2)
+                pygame.draw.rect(self.screen, (255, 255, 255), self.tank2.rect, 2)
+                if self.tank3_joystick1:
+                    pygame.draw.rect(self.screen, (255, 255, 255), self.tank3_joystick1.rect, 2)
+                if self.tank4_joystick2:
+                    pygame.draw.rect(self.screen, (255, 255, 255), self.tank4_joystick2.rect, 2)
 
             pygame.display.flip()
             pygame.time.Clock().tick(60)

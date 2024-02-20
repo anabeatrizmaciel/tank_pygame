@@ -13,6 +13,9 @@ class Tank(pygame.sprite.Sprite):
             self.current_frame = 1
         else:
             self.current_frame = 0
+        self.quick_rotate_angle = 0
+        self.quick_rotate_timer = 0
+        self.quick_rotate_duration = 500
         self.spritesheet_path = spritesheet_path
         self.load_spritesheet()
 
@@ -91,6 +94,20 @@ class Tank(pygame.sprite.Sprite):
                 self.kill()
                 self.image.set_alpha(0)
 
+    def rotate_quickly(self):
+        rotated_sprite = pygame.transform.rotate(self.image, self.quick_rotate_angle)
+        self.image = rotated_sprite
+
+    def hit(self):
+        if self.lives > 0:
+            self.lives -= 1
+            self.quick_rotate_angle = 90  # Ângulo para a rotação rápida
+            self.quick_rotate_timer = pygame.time.get_ticks()  # Configura o temporizador
+            print(f"Tank ID {self.id} hit! Lives remaining: {self.lives}")
+            if self.lives == 0:
+                self.kill()
+                self.image.set_alpha(0)
+
     def update(self):
         if not self.alive():
             return
@@ -118,3 +135,11 @@ class Tank(pygame.sprite.Sprite):
 
         for bullet in self.bullets:
             bullet.update()
+
+        if self.quick_rotate_timer > 0:
+            elapsed_time = pygame.time.get_ticks() - self.quick_rotate_timer
+            if elapsed_time >= self.quick_rotate_duration:
+                self.quick_rotate_timer = 0
+                self.quick_rotate_angle = 0
+            else:
+                self.rotate_quickly()
