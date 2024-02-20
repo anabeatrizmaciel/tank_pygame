@@ -2,84 +2,84 @@ import pygame
 import sys
 
 class Credits:
-    def __init__(self, largura_tela, altura_tela):
+    def __init__(self, screen_width, screen_height):
         pygame.init()
-        self.tela = pygame.display.set_mode((largura_tela, altura_tela))
+        self.tela = pygame.display.set_mode((screen_width, screen_height))
         pygame.display.set_caption("Tela de Créditos")
 
-        # Defina as cores
-        self.cor_fundo = (89, 164, 89)
-        self.cor_branca = (255, 255, 255)
-        self.cor_preta = (0, 0, 0)
+        # Defining colors
+        self.BACKGROUND = (89, 164, 89)
+        self.WHITE = (255, 255, 255)
+        self.BLACK = (0, 0, 0)
 
-        # Defina as fontes e tamanhos de texto
-        self.fonte_titulo = pygame.font.Font('assets/PressStart2P.ttf', 28)
-        self.fonte_credito_nome = pygame.font.Font('assets/PressStart2P.ttf', 10)
-        self.fonte_credito_profissao = pygame.font.Font('assets/PressStart2P.ttf', 8)
+        # Defining text fonts and size
+        self.font_title = pygame.font.Font('assets/PressStart2P.ttf', 28)
+        self.font_credits_name = pygame.font.Font('assets/PressStart2P.ttf', 10)
+        self.font_credits_job = pygame.font.Font('assets/PressStart2P.ttf', 8)
 
-        # Lista de créditos
-        self.creditos = [
+        # Credits list
+        self.credits = [
             {"nome": "Ana Beatriz Maciel Nunes", "profissao": "Game Developer", "imagem": "assets/ana1.jpg"},
             {"nome": "Fernando Luiz da Silva Freire", "profissao": "Game Developer", "imagem": "assets/fernando1.jpg"},
             {"nome": "Marcelo Heitor de Almeida Lira", "profissao": "Game Developer", "imagem": "assets/marcelo1.jpg"},
         ]
 
-    def exibir_creditos(self):
-        self.tela.fill(self.cor_fundo)
+    def show_credits(self):
+        self.tela.fill(self.BACKGROUND)
 
-        # Título
-        texto_titulo = self.fonte_titulo.render("Credits", True, self.cor_branca)
-        self.tela.blit(texto_titulo, (self.tela.get_width() // 2 - texto_titulo.get_width() // 2, 50))
+        # Title
+        text_title = self.font_title.render("Credits", True, self.WHITE)
+        self.tela.blit(text_title, (self.tela.get_width() // 2 - text_title.get_width() // 2, 50))
 
-        # Exibir créditos com imagens
+        # Show credits images
         x_pos = 65
-        for credito in self.creditos:
-            # Carregar imagem
-            imagem = pygame.image.load(credito["imagem"])
-            # Redimensionar imagem para 150x150 pixels
-            imagem = pygame.transform.scale(imagem, (150, 150))
-            # Exibir imagem
-            self.tela.blit(imagem, (x_pos, 190))
+        for credit in self.credits:
+            # Load image
+            image = pygame.image.load(credit["imagem"])
+            # Re-dimension image to 150x150 pixels
+            image = pygame.transform.scale(image, (150, 150))
+            # Show image
+            self.tela.blit(image, (x_pos, 190))
 
-            # Exibir nome abaixo da imagem (quebrando linhas se necessário)
-            palavras_nome = credito["nome"].split()
-            linha_atual_nome = ""
+            # Show name below image (breaking the lines, if necessary)
+            name_words = credit["nome"].split()
+            current_line_name = ""
             y_pos_nome = 370
-            for palavra_nome in palavras_nome:
-                linha_teste_nome = linha_atual_nome + palavra_nome + " "
-                if self.fonte_credito_nome.render(linha_teste_nome, True, self.cor_branca).get_width() < 200:
-                    linha_atual_nome = linha_teste_nome
+            for name_word in name_words:
+                test_line_name = current_line_name + name_word + " "
+                if self.font_credits_name.render(test_line_name, True, self.WHITE).get_width() < 200:
+                    current_line_name = test_line_name
                 else:
-                    texto_nome = self.fonte_credito_nome.render(linha_atual_nome, True, self.cor_branca)
-                    self.tela.blit(texto_nome, (x_pos + 75 - texto_nome.get_width() // 2, y_pos_nome))
-                    linha_atual_nome = palavra_nome + " "
+                    text_name = self.font_credits_name.render(current_line_name, True, self.WHITE)
+                    self.tela.blit(text_name, (x_pos + 75 - text_name.get_width() // 2, y_pos_nome))
+                    current_line_name = name_word + " "
                     y_pos_nome += 20
 
-            # Renderizar a última linha do nome
-            texto_nome = self.fonte_credito_nome.render(linha_atual_nome, True, self.cor_branca)
-            self.tela.blit(texto_nome, (x_pos + 75 - texto_nome.get_width() // 2, y_pos_nome))
+            # Render last line of the name
+            text_name = self.font_credits_name.render(current_line_name, True, self.WHITE)
+            self.tela.blit(text_name, (x_pos + 75 - text_name.get_width() // 2, y_pos_nome))
 
-            # Exibir profissao abaixo do nome
-            y_pos_profissao = y_pos_nome + 25
-            texto_profissao = self.fonte_credito_profissao.render(credito["profissao"], True, self.cor_preta)
-            self.tela.blit(texto_profissao, (x_pos + 75 - texto_profissao.get_width() // 2, y_pos_profissao))
+            # Show job below the name
+            y_pos_job = y_pos_nome + 25
+            text_job = self.font_credits_job.render(credit["profissao"], True, self.BLACK)
+            self.tela.blit(text_job, (x_pos + 75 - text_job.get_width() // 2, y_pos_job))
 
             x_pos += 250
 
         pygame.display.flip()
 
-    def executar(self):
-        rodando = True
-        while rodando:
+    def execute(self):
+        running = True
+        while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    rodando = False
+                    running = False
 
-            self.exibir_creditos()
+            self.show_credits()
 
         pygame.quit()
         sys.exit()
 
 if __name__ == "__main__":
-    tela_creditos = Credits(800, 600)
-    tela_creditos.executar()
+    credits_screen = Credits(800, 600)
+    credits_screen.execute()

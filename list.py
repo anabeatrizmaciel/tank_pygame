@@ -81,4 +81,4 @@ labyrinths = [
     ],
 ]
 
-selected_maze = random.choice(labyrinths)  # Escolhe um labirinto aleatório da lista
+selected_maze = random.choice(labyrinths)  # Choose a random maze from the list

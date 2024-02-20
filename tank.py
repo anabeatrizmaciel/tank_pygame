@@ -9,7 +9,7 @@ class Tank(pygame.sprite.Sprite):
         self.spritesheet_path = spritesheet_path
         self.current_frame = 0
         self.animation_frames = 4
-        if id == 1:  # Apenas para o Tanque 1
+        if id == 1:  # Only for tank 1
             self.current_frame = 1
         else:
             self.current_frame = 0

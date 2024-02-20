@@ -3,15 +3,15 @@ from wall import Wall
 
 class Maze:
 
-    def __init__(self, largura, altura, colors, maze_structure):
-        self.largura = largura
-        self.altura = altura
+    def __init__(self, width, height, colors, maze_structure):
+        self.width = width
+        self.height = height
         self.colors = colors
-        self.maze_structure = maze_structure  #Representação da estrutura do labirinto
-        self.wall_color = self.colors.random_color_wall()#Seleciona uma cor aleatória para as paredes
-        self.background_color = self.colors.random_color_background(self.wall_color) #Seleciona uma cor aleatória para o fundo, diferente da cor das paredes
-        self.walls = pygame.sprite.Group() #Cria um grupo de sprites para armazenar as paredes do labirinto
-        self.create_walls_group()  #Chama o método para criar as paredes com base na estrutura do labirinto
+        self.maze_structure = maze_structure  # Representation of the maze's structure
+        self.wall_color = self.colors.random_color_wall() # Select a random color for the walls
+        self.background_color = self.colors.random_color_background(self.wall_color) # Select a random color to the background, different form the wall's color
+        self.walls = pygame.sprite.Group() # Create a group of sprites to store tha maze's walls
+        self.create_walls_group()  # Create the walls according to the maze's structure
 
     def create_walls_group(self):
         cell_height = 40
@@ -25,7 +25,7 @@ class Maze:
                     wall = Wall(x * cell_height, y * cell_height * 0.4, brick_image)
                     self.walls.add(wall)
     def draw(self, tela):
-        tela.fill(self.background_color)  # Preenche o fundo com a cor aleatória selecionada
+        tela.fill(self.background_color)  # Fill the background with the random color selected
 
         for wall in self.walls: 
-            tela.blit(wall.image, wall.rect) #Desenha cada parede na tela
+            tela.blit(wall.image, wall.rect) # Draw each wall in the screen

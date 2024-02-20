@@ -23,7 +23,7 @@ credits_screen = Credits(screen_width, screen_height)
 
 
 def show_credits():
-    credits_screen.executar()
+    credits_screen.execute()
 
 
 def start_game():
@@ -60,7 +60,7 @@ def main_menu():
         credits_button_rect = credits_button_text.get_rect(center=(screen_width // 2, screen_height // 2 + 100))
         screen.blit(credits_button_text, credits_button_rect)
 
-        # Armazene as referências para os botões para verificar cliques posteriormente
+        # Store references to the buttons to verify clicks later
         play_button_rect = play_rect
 
         pygame.display.flip()

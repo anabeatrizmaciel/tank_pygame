@@ -4,14 +4,14 @@ import random
 class Bonus(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.Surface((20, 20))  # Tamanho do bônus
-        self.image.fill((239, 84, 16))  # Cor do bônus (dourado)
+        self.image = pygame.Surface((20, 20))  # Bonus' size
+        self.image.fill((239, 84, 16))  # Bonus' color (golden)
         self.rect = self.image.get_rect()
-        self.rect.x = 0  # A posição x será definida posteriormente
-        self.rect.y = 0  # A posição y será definida posteriormente
+        self.rect.x = 0  # X position will be defined afterward
+        self.rect.y = 0  # Y position will be defined afterward
 
     def generate_position(self, screen_width, screen_height, walls):
-        # Gerar posição aleatória que não esteja sobre as paredes
+        # Generate random position that isn't in the walls
         while True:
             self.rect.x = random.randint(0, screen_width - self.rect.width)
             self.rect.y = random.randint(0, screen_height - self.rect.height)

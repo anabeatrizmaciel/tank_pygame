@@ -4,7 +4,7 @@ from tank import Tank
 from maze import Maze
 from color import Color
 from list import selected_maze
-from bonus import Bonus  # Importe a classe Bonus
+from bonus import Bonus  # Importing Bonus class
 
 class Game:
     def __init__(self):
@@ -19,20 +19,20 @@ class Game:
 
         self.bullets = pygame.sprite.Group()
 
-        image_path_tanque_1 = "assets/tanque1_spritesheet.png"
-        image_path_tanque_2 = "assets/tanque2_spritesheet.png"
-        image_path_tanque_3 = "assets/tanque3.png"
-        image_path_tanque_4 = "assets/tanque4.png"
+        image_path_tank_1 = "assets/tanque1_spritesheet.png"
+        image_path_tank_2 = "assets/tanque2_spritesheet.png"
+        image_path_tank_3 = "assets/tanque3.png"
+        image_path_tank_4 = "assets/tanque4.png"
 
         self.tank1 = Tank((255, 255, 255), 150, screen_height // 3, 1, {
             'teclas': {'cima': pygame.K_w, 'baixo': pygame.K_s, 'esquerda': pygame.K_a, 'direita': pygame.K_d,
                        'disparar': pygame.K_SPACE}}, self.bullets, screen_width, screen_height, self.maze.walls,
-                        spritesheet_path=image_path_tanque_1)
+                        spritesheet_path=image_path_tank_1)
 
         self.tank2 = Tank((0, 0, 0), screen_width - 150, screen_height // 3, 2, {
             'teclas': {'cima': pygame.K_UP, 'baixo': pygame.K_DOWN, 'esquerda': pygame.K_LEFT, 'direita': pygame.K_RIGHT,
                        'disparar': pygame.K_RETURN}}, self.bullets, screen_width, screen_height, self.maze.walls,
-                        spritesheet_path=image_path_tanque_2)
+                        spritesheet_path=image_path_tank_2)
 
         self.tank1.direction = "right"
         self.tank2.direction = "left"
@@ -49,26 +49,26 @@ class Game:
         if pygame.joystick.get_count() >= 1:
             joystick1 = pygame.joystick.Joystick(0)
             joystick1.init()
-            self.tank3_joyk3ick1 = Tank(self.color.BLUE, 150, 2 * screen_height // 3, {'joystick': joystick1},
-                                           self.bullets, screen_width, screen_height, self.maze.walls, image_path_tanque_3)
+            self.tank3_joystick1 = Tank(self.color.BLUE, 150, 2 * screen_height // 3, {'joystick': joystick1},
+                                           self.bullets, screen_width, screen_height, self.maze.walls, image_path_tank_3)
             self.tank3_joystick1.set_walls(self.maze.walls)
-            self.todos_sprites.add(self.tank3_joyk3ick1)
+            self.all_sprites.add(self.tank3_joystick1)
 
         if pygame.joystick.get_count() >= 2:
             joystick2 = pygame.joystick.Joystick(1)
             joystick2.init()
             self.tank4_joystick2 = Tank(self.color.YELLOW, screen_width - 150, 2 * screen_height // 3,
-                                           {'joystick': joystick2}, self.bullets, screen_width, screen_height, self.maze.walls, image_path_tanque_4,
+                                           {'joystick': joystick2}, self.bullets, screen_width, screen_height, self.maze.walls, image_path_tank_4,
                                            [self.tank1, self.tank2, self.tank3_joystick1 if pygame.joystick.get_count() >= 1 else None])
             self.tank4_joystick2.set_walls(self.maze.walls)
-            self.todos_sprites.add(self.tank4_joystick2)
+            self.all_sprites.add(self.tank4_joystick2)
 
         pygame.font.init()
         self.font = pygame.font.Font('assets/PressStart2P.ttf', 15)
 
-        # Inicialize o grupo de sprites para os bônus
+        # Initialize sprite group for the bonus
         self.bonuses = pygame.sprite.Group()
-        self.next_bonus_time = pygame.time.get_ticks() + 50000  # Tempo em milissegundos para o próximo bônus (30 segundos)
+        self.next_bonus_time = pygame.time.get_ticks() + 50000  # Time, in milliseconds to the next bonus (30 seconds)
 
     def generate_bonus(self):
         bonus = Bonus()
@@ -108,10 +108,10 @@ class Game:
         while True:
             current_time = pygame.time.get_ticks()
 
-            # Se o tempo atual for maior ou igual ao tempo para o próximo bônus, gere um novo bônus
+            # If the current time is greater or equal to the time for the next bonus, generate bonus
             if current_time >= self.next_bonus_time:
                 self.generate_bonus()
-                # Defina o próximo tempo de bônus para daqui a 30 segundos
+                # Define next bonus spawn for 30 seconds
                 self.next_bonus_time = current_time + 50000
 
             for evento in pygame.event.get():
@@ -127,18 +127,18 @@ class Game:
 
                 elif evento.type == pygame.JOYBUTTONDOWN:
                     if evento.joy == 0:
-                        self.tank3_joystick1.fire_bullet(self.tank3_joyk3ick1.direction, None)
+                        self.tank3_joystick1.fire_bullet(self.tank3_joystick1.direction, None)
                     elif evento.joy == 1:
                         self.tank4_joystick2.fire_bullet(self.tank4_joystick2.direction, None)
 
             self.bullets.update()
             self.all_sprites.update()
 
-            # Verifica colisões entre cada tanque e o grupo de bônus
+            # Verify collisions between the tanks and the bonuses
             bonus_collisions = pygame.sprite.groupcollide(self.bonuses, self.all_sprites, True, False)
             for bonus, tanks in bonus_collisions.items():
                 for tank in tanks:
-                    tank.increment_lives()  # Incrementa a vida de cada tanque que colidiu com o bônus
+                    tank.increment_lives()  # Increase the life of the tank that collided with the bonus
 
             winner_id = self.check_winner()
             if winner_id is not None:
@@ -149,7 +149,7 @@ class Game:
             self.maze.draw(self.tela)
             self.bullets.draw(self.tela)
             self.all_sprites.draw(self.tela)
-            self.bonuses.draw(self.tela)  # Desenhe os bônus na tela
+            self.bonuses.draw(self.tela)  # Draw bonus in the screen
             self.draw_score()
 
             pygame.display.flip()
