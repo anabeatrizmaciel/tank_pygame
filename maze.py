@@ -27,5 +27,5 @@ class Maze:
     def draw(self, tela):
         tela.fill(self.background_color)  # Preenche o fundo com a cor aleatória selecionada
 
-        for wall in self.walls:  #Desenha os sprites das paredes
+        for wall in self.walls: 
             tela.blit(wall.image, wall.rect) #Desenha cada parede na tela
