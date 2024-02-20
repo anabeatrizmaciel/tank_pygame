@@ -24,8 +24,8 @@ class Maze:
                 if cell == "#":
                     wall = Wall(x * cell_height, y * cell_height * 0.4, brick_image)
                     self.walls.add(wall)
-    def draw(self, tela):
-        tela.fill(self.background_color)  # Fill the background with the random color selected
+    def draw(self, screen):
+        screen.fill(self.background_color)  # Fill the background with the random color selected
 
         for wall in self.walls: 
-            tela.blit(wall.image, wall.rect) # Draw each wall in the screen
+            screen.blit(wall.image, wall.rect) # Draw each wall in the screen

@@ -4,7 +4,7 @@ import sys
 class Credits:
     def __init__(self, screen_width, screen_height):
         pygame.init()
-        self.tela = pygame.display.set_mode((screen_width, screen_height))
+        self.screen = pygame.display.set_mode((screen_width, screen_height))
         pygame.display.set_caption("Tela de Créditos")
 
         # Defining colors
@@ -25,11 +25,11 @@ class Credits:
         ]
 
     def show_credits(self):
-        self.tela.fill(self.BACKGROUND)
+        self.screen.fill(self.BACKGROUND)
 
         # Title
         text_title = self.font_title.render("Credits", True, self.WHITE)
-        self.tela.blit(text_title, (self.tela.get_width() // 2 - text_title.get_width() // 2, 50))
+        self.screen.blit(text_title, (self.screen.get_width() // 2 - text_title.get_width() // 2, 50))
 
         # Show credits images
         x_pos = 65
@@ -39,7 +39,7 @@ class Credits:
             # Re-dimension image to 150x150 pixels
             image = pygame.transform.scale(image, (150, 150))
             # Show image
-            self.tela.blit(image, (x_pos, 190))
+            self.screen.blit(image, (x_pos, 190))
 
             # Show name below image (breaking the lines, if necessary)
             name_words = credit["nome"].split()
@@ -51,18 +51,18 @@ class Credits:
                     current_line_name = test_line_name
                 else:
                     text_name = self.font_credits_name.render(current_line_name, True, self.WHITE)
-                    self.tela.blit(text_name, (x_pos + 75 - text_name.get_width() // 2, y_pos_nome))
+                    self.screen.blit(text_name, (x_pos + 75 - text_name.get_width() // 2, y_pos_nome))
                     current_line_name = name_word + " "
                     y_pos_nome += 20
 
             # Render last line of the name
             text_name = self.font_credits_name.render(current_line_name, True, self.WHITE)
-            self.tela.blit(text_name, (x_pos + 75 - text_name.get_width() // 2, y_pos_nome))
+            self.screen.blit(text_name, (x_pos + 75 - text_name.get_width() // 2, y_pos_nome))
 
             # Show job below the name
             y_pos_job = y_pos_nome + 25
             text_job = self.font_credits_job.render(credit["profissao"], True, self.BLACK)
-            self.tela.blit(text_job, (x_pos + 75 - text_job.get_width() // 2, y_pos_job))
+            self.screen.blit(text_job, (x_pos + 75 - text_job.get_width() // 2, y_pos_job))
 
             x_pos += 250
 

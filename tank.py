@@ -19,7 +19,7 @@ class Tank(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-        self.velocidade = 5
+        self.velocity = 5
         self.id = id
         self.control_keys = controls.get('teclas')
         self.joystick = None
@@ -51,22 +51,22 @@ class Tank(pygame.sprite.Sprite):
 
     def track_controls(self, keys):
         if keys[self.control_keys['cima']]:
-            self.rect.y -= self.velocidade
+            self.rect.y -= self.velocity
             self.direction = "up"
             self.current_frame = 0
             self.animate()
         if keys[self.control_keys['baixo']]:
-            self.rect.y += self.velocidade
+            self.rect.y += self.velocity
             self.direction = "down"
             self.current_frame = 1
             self.animate()
         if keys[self.control_keys['esquerda']]:
-            self.rect.x -= self.velocidade
+            self.rect.x -= self.velocity
             self.direction = "left"
             self.current_frame = 2
             self.animate()
         if keys[self.control_keys['direita']]:
-            self.rect.x += self.velocidade
+            self.rect.x += self.velocity
             self.direction = "right"
             self.current_frame = 3
             self.animate()
@@ -102,8 +102,8 @@ class Tank(pygame.sprite.Sprite):
             joystick = self.joystick
             x_axis = joystick.get_axis(0)
             y_axis = joystick.get_axis(1)
-            self.rect.x += int(x_axis * self.velocidade)
-            self.rect.y += int(y_axis * self.velocidade)
+            self.rect.x += int(x_axis * self.velocity)
+            self.rect.y += int(y_axis * self.velocity)
 
             if joystick.get_button(0):
                 self.fire_bullet(self.direction)

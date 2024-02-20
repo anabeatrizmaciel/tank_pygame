@@ -11,7 +11,7 @@ class Game:
         pygame.init()
         screen_width = 800
         screen_height = 600
-        self.tela = pygame.display.set_mode((screen_width, screen_height))
+        self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.color = Color()
 
         self.maze = Maze(screen_width, screen_height, self.color, selected_maze)
@@ -72,7 +72,7 @@ class Game:
 
     def generate_bonus(self):
         bonus = Bonus()
-        bonus.generate_position(self.tela.get_width(), self.tela.get_height(), self.maze.walls)
+        bonus.generate_position(self.screen.get_width(), self.screen.get_height(), self.maze.walls)
         self.bonuses.add(bonus)
 
     def draw_score(self):
@@ -80,7 +80,7 @@ class Game:
         for tank in [self.tank1, self.tank2, self.tank3_joystick1, self.tank4_joystick2]:
             if tank is not None:
                 score_text = self.font.render(f"Tank {tank.id} Life: {tank.lives}", True, (255, 255, 255))
-                self.tela.blit(score_text, (10, y_offset))
+                self.screen.blit(score_text, (10, y_offset))
                 y_offset += 20
 
     def check_winner(self):
@@ -90,11 +90,11 @@ class Game:
         return None
 
     def show_winner_screen(self, winner_id):
-        self.tela.fill(self.color.BLACK)
+        self.screen.fill(self.color.BLACK)
 
         winner_text = self.font.render(f"Tank {winner_id} Won!", True, (255, 255, 255))
-        text_rect = winner_text.get_rect(center=(self.tela.get_width() // 2, self.tela.get_height() // 2))
-        self.tela.blit(winner_text, text_rect)
+        text_rect = winner_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
+        self.screen.blit(winner_text, text_rect)
 
         pygame.display.flip()
 
@@ -145,11 +145,11 @@ class Game:
                 self.show_winner_screen(winner_id)
                 break
 
-            self.tela.fill(self.color.BLACK)
-            self.maze.draw(self.tela)
-            self.bullets.draw(self.tela)
-            self.all_sprites.draw(self.tela)
-            self.bonuses.draw(self.tela)  # Draw bonus in the screen
+            self.screen.fill(self.color.BLACK)
+            self.maze.draw(self.screen)
+            self.bullets.draw(self.screen)
+            self.all_sprites.draw(self.screen)
+            self.bonuses.draw(self.screen)  # Draw bonus in the screen
             self.draw_score()
 
             pygame.display.flip()
