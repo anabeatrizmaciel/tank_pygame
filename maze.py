@@ -14,19 +14,18 @@ class Maze:
         self.create_walls_group()  #Chama o método para criar as paredes com base na estrutura do labirinto
 
     def create_walls_group(self):
-        tamanho_celula = 40
-        tamanho_tijolo = 50
+        cell_height = 40
+        brick_height = 50
         brick_image = pygame.image.load("assets/bricks1.png").convert_alpha()
-        brick_image = pygame.transform.scale(brick_image, (tamanho_tijolo, tamanho_tijolo))
+        brick_image = pygame.transform.scale(brick_image, (brick_height, brick_height))
 
         for y, row in enumerate(self.maze_structure):
             for x, cell in enumerate(row):
                 if cell == "#":
-                    wall = Wall(x * tamanho_celula, y * tamanho_celula * 0.4, brick_image)
+                    wall = Wall(x * cell_height, y * cell_height * 0.4, brick_image)
                     self.walls.add(wall)
     def draw(self, tela):
         tela.fill(self.background_color)  # Preenche o fundo com a cor aleatória selecionada
-        # cor_parede = self.colors.cor_aleatoria()  # Seleciona uma cor aleatória para as paredes
 
-        for parede in self.walls:  #Desenha os sprites das paredes
-            tela.blit(parede.image, parede.rect) #Desenha cada parede na tela
+        for wall in self.walls:  #Desenha os sprites das paredes
+            tela.blit(wall.image, wall.rect) #Desenha cada parede na tela

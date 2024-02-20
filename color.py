@@ -16,6 +16,6 @@ class Color:
         return random.choice([self.RED, self.GREEN, self.BLUE, self.YELLOW, self.PURPLE, self.CYAN])
 
     def random_color_background(self, cor):
-        cores_disponiveis = [c for c in [self.RED, self.GREEN, self.BLUE, self.YELLOW, self.PURPLE, self.CYAN] if
+        color_available = [c for c in [self.RED, self.GREEN, self.BLUE, self.YELLOW, self.PURPLE, self.CYAN] if
                              c != cor]
-        return random.choice(cores_disponiveis)
+        return random.choice(color_available)

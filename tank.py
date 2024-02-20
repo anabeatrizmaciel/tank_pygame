@@ -3,12 +3,12 @@ from bullet import Bullet
 
 class Tank(pygame.sprite.Sprite):
     def __init__(self, color, x, y, id, controls, bullets, screen_width, screen_height, walls=None,
-                 image_path_tanque_1=None, image_path_tanque_2=None):
+                 image_path_tank_1=None, image_path_tank_2=None):
         super().__init__()
 
-        self.image_path_tanque_1 = image_path_tanque_1
-        self.image_path_tanque_2 = image_path_tanque_2
-        self.current_image_path = self.image_path_tanque_1
+        self.image_path_tank_1 = image_path_tank_1
+        self.image_path_tak_2 = image_path_tank_2
+        self.current_image_path = self.image_path_tank_1
         self.load_image()
 
         self.rect = self.image.get_rect()
@@ -16,7 +16,7 @@ class Tank(pygame.sprite.Sprite):
 
         self.velocidade = 5
         self.id = id
-        self.teclas_controle = controls.get('teclas')
+        self.control_keys = controls.get('teclas')
         self.joystick = None
         self.bullets = bullets
         self.walls = walls
@@ -25,6 +25,7 @@ class Tank(pygame.sprite.Sprite):
         self.lives = 3
         self.hit_counter = 0
         self.direction = "up"
+        self.can_shoot = True  # Adiciona uma variável para controlar se o tanque pode disparar
 
     def increment_lives(self):
         self.lives += 1
@@ -36,21 +37,23 @@ class Tank(pygame.sprite.Sprite):
         self.image = pygame.image.load(self.current_image_path)
 
     def track_controls(self, keys):
-        if keys[self.teclas_controle['cima']]:
+        if keys[self.control_keys['cima']]:
             self.rect.y -= self.velocidade
             self.direction = "up"
-        if keys[self.teclas_controle['baixo']]:
+        if keys[self.control_keys['baixo']]:
             self.rect.y += self.velocidade
             self.direction = "down"
-        if keys[self.teclas_controle['esquerda']]:
+        if keys[self.control_keys['esquerda']]:
             self.rect.x -= self.velocidade
             self.direction = "left"
-        if keys[self.teclas_controle['direita']]:
+        if keys[self.control_keys['direita']]:
             self.rect.x += self.velocidade
             self.direction = "right"
 
     def fire_bullet(self, direction, enemy_tanks):
-        if self.alive():
+        self.can_shoot = not any(bullet.alive() for bullet in self.bullets)  # Atualiza a capacidade de disparo
+
+        if self.alive() and self.can_shoot:  # Verifica se o tanque pode disparar
             bullet_color = (255, 0, 0) if self.id == 1 else (0, 255, 0)
             enemy_tanks = [tank for tank in enemy_tanks if tank is not None and tank.id != self.id]
             bullet = Bullet(self.rect.centerx, self.rect.centery, direction, bullet_color, self.screen_width,
@@ -82,7 +85,7 @@ class Tank(pygame.sprite.Sprite):
             if joystick.get_button(0):
                 self.fire_bullet(self.direction)
 
-        elif self.teclas_controle:
+        elif self.control_keys:
             keys = pygame.key.get_pressed()
             self.track_controls(keys)
 

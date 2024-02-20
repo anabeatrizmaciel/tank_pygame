@@ -1,6 +1,6 @@
 import random
 
-labirintos = [
+labyrinths = [
     [
         "####################",
         "#                  #",
@@ -81,4 +81,4 @@ labirintos = [
     ],
 ]
 
-labirinto_escolhido = random.choice(labirintos)  # Escolhe um labirinto aleatório da lista
+selected_maze = random.choice(labyrinths)  # Escolhe um labirinto aleatório da lista
