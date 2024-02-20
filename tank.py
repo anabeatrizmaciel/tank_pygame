@@ -3,13 +3,18 @@ from bullet import Bullet
 
 class Tank(pygame.sprite.Sprite):
     def __init__(self, color, x, y, id, controls, bullets, screen_width, screen_height, walls=None,
-                 image_path_tank_1=None, image_path_tank_2=None):
+                 spritesheet_path=None):
         super().__init__()
 
-        self.image_path_tank_1 = image_path_tank_1
-        self.image_path_tak_2 = image_path_tank_2
-        self.current_image_path = self.image_path_tank_1
-        self.load_image()
+        self.spritesheet_path = spritesheet_path
+        self.current_frame = 0
+        self.animation_frames = 4
+        if id == 1:  # Apenas para o Tanque 1
+            self.current_frame = 1
+        else:
+            self.current_frame = 0
+        self.spritesheet_path = spritesheet_path
+        self.load_spritesheet()
 
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -25,7 +30,18 @@ class Tank(pygame.sprite.Sprite):
         self.lives = 3
         self.hit_counter = 0
         self.direction = "up"
-        self.can_shoot = True  # Adiciona uma variável para controlar se o tanque pode disparar
+        self.can_shoot = True
+
+    def load_spritesheet(self):
+        spritesheet = pygame.image.load(self.spritesheet_path)
+        self.sprite_width = spritesheet.get_width() // 4
+        self.sprite_height = spritesheet.get_height()
+        self.frames = [spritesheet.subsurface((i * self.sprite_width, 0, self.sprite_width, self.sprite_height)) for i in range(4)]
+        self.image = self.frames[self.current_frame]
+
+    def animate(self):
+        self.current_frame = (self.current_frame + 1) % 4
+        self.image = self.frames[self.current_frame]
 
     def increment_lives(self):
         self.lives += 1
@@ -33,27 +49,34 @@ class Tank(pygame.sprite.Sprite):
     def set_walls(self, walls):
         self.walls = walls
 
-    def load_image(self):
-        self.image = pygame.image.load(self.current_image_path)
-
     def track_controls(self, keys):
         if keys[self.control_keys['cima']]:
             self.rect.y -= self.velocidade
             self.direction = "up"
+            self.current_frame = 0
+            self.animate()
         if keys[self.control_keys['baixo']]:
             self.rect.y += self.velocidade
             self.direction = "down"
+            self.current_frame = 1
+            self.animate()
         if keys[self.control_keys['esquerda']]:
             self.rect.x -= self.velocidade
             self.direction = "left"
+            self.current_frame = 2
+            self.animate()
         if keys[self.control_keys['direita']]:
             self.rect.x += self.velocidade
             self.direction = "right"
+            self.current_frame = 3
+            self.animate()
+        if keys[self.control_keys['esquerda']] or keys[self.control_keys['direita']] or keys[self.control_keys['cima']] or keys[self.control_keys['baixo']]:
+            self.animate()
 
     def fire_bullet(self, direction, enemy_tanks):
-        self.can_shoot = not any(bullet.alive() for bullet in self.bullets)  # Atualiza a capacidade de disparo
+        self.can_shoot = not any(bullet.alive() for bullet in self.bullets)
 
-        if self.alive() and self.can_shoot:  # Verifica se o tanque pode disparar
+        if self.alive() and self.can_shoot:
             bullet_color = (255, 0, 0) if self.id == 1 else (0, 255, 0)
             enemy_tanks = [tank for tank in enemy_tanks if tank is not None and tank.id != self.id]
             bullet = Bullet(self.rect.centerx, self.rect.centery, direction, bullet_color, self.screen_width,

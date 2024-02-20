@@ -19,20 +19,20 @@ class Game:
 
         self.bullets = pygame.sprite.Group()
 
-        image_path_tanque_1 = "assets/tanque1.png"
-        image_path_tanque_2 = "assets/tanque2.png"
+        image_path_tanque_1 = "assets/tanque1_spritesheet.png"
+        image_path_tanque_2 = "assets/tanque2_spritesheet.png"
         image_path_tanque_3 = "assets/tanque3.png"
         image_path_tanque_4 = "assets/tanque4.png"
 
         self.tank1 = Tank((255, 255, 255), 150, screen_height // 3, 1, {
             'teclas': {'cima': pygame.K_w, 'baixo': pygame.K_s, 'esquerda': pygame.K_a, 'direita': pygame.K_d,
                        'disparar': pygame.K_SPACE}}, self.bullets, screen_width, screen_height, self.maze.walls,
-                        image_path_tanque_1)
+                        spritesheet_path=image_path_tanque_1)
 
         self.tank2 = Tank((0, 0, 0), screen_width - 150, screen_height // 3, 2, {
             'teclas': {'cima': pygame.K_UP, 'baixo': pygame.K_DOWN, 'esquerda': pygame.K_LEFT, 'direita': pygame.K_RIGHT,
                        'disparar': pygame.K_RETURN}}, self.bullets, screen_width, screen_height, self.maze.walls,
-                        image_path_tanque_2)
+                        spritesheet_path=image_path_tanque_2)
 
         self.tank1.direction = "right"
         self.tank2.direction = "left"
