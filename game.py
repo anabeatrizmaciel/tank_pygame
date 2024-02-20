@@ -4,6 +4,7 @@ from tank import Tank
 from maze import Maze
 from color import Color
 from list import selected_maze
+from list import labyrinths
 from bonus import Bonus  # Importing Bonus class
 
 class Game:
@@ -24,12 +25,12 @@ class Game:
         image_path_tank_3 = "assets/tanque3.png"
         image_path_tank_4 = "assets/tanque4.png"
 
-        self.tank1 = Tank((255, 255, 255), 150, screen_height // 3, 1, {
+        self.tank1 = Tank( 150, screen_height // 3, 1, {
             'teclas': {'cima': pygame.K_w, 'baixo': pygame.K_s, 'esquerda': pygame.K_a, 'direita': pygame.K_d,
                        'disparar': pygame.K_SPACE}}, self.bullets, screen_width, screen_height, self.maze.walls,
                         spritesheet_path=image_path_tank_1)
 
-        self.tank2 = Tank((0, 0, 0), screen_width - 150, screen_height // 3, 2, {
+        self.tank2 = Tank( screen_width - 150, screen_height // 3, 2, {
             'teclas': {'cima': pygame.K_UP, 'baixo': pygame.K_DOWN, 'esquerda': pygame.K_LEFT, 'direita': pygame.K_RIGHT,
                        'disparar': pygame.K_RETURN}}, self.bullets, screen_width, screen_height, self.maze.walls,
                         spritesheet_path=image_path_tank_2)
@@ -49,7 +50,7 @@ class Game:
         if pygame.joystick.get_count() >= 1:
             joystick1 = pygame.joystick.Joystick(0)
             joystick1.init()
-            self.tank3_joystick1 = Tank(self.color.BLUE, 150, 2 * screen_height // 3, {'joystick': joystick1},
+            self.tank3_joystick1 = Tank( 150, 2 * screen_height // 3, {'joystick': joystick1},
                                            self.bullets, screen_width, screen_height, self.maze.walls, image_path_tank_3)
             self.tank3_joystick1.set_walls(self.maze.walls)
             self.all_sprites.add(self.tank3_joystick1)
@@ -57,7 +58,7 @@ class Game:
         if pygame.joystick.get_count() >= 2:
             joystick2 = pygame.joystick.Joystick(1)
             joystick2.init()
-            self.tank4_joystick2 = Tank(self.color.YELLOW, screen_width - 150, 2 * screen_height // 3,
+            self.tank4_joystick2 = Tank( screen_width - 150, 2 * screen_height // 3,
                                            {'joystick': joystick2}, self.bullets, screen_width, screen_height, self.maze.walls, image_path_tank_4,
                                            [self.tank1, self.tank2, self.tank3_joystick1 if pygame.joystick.get_count() >= 1 else None])
             self.tank4_joystick2.set_walls(self.maze.walls)

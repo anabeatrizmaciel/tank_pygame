@@ -2,7 +2,7 @@ import pygame
 from bullet import Bullet
 
 class Tank(pygame.sprite.Sprite):
-    def __init__(self, color, x, y, id, controls, bullets, screen_width, screen_height, walls=None,
+    def __init__(self, x, y, id, controls, bullets, screen_width, screen_height, walls=None,
                  spritesheet_path=None):
         super().__init__()
 

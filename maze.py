@@ -8,8 +8,7 @@ class Maze:
         self.height = height
         self.colors = colors
         self.maze_structure = maze_structure  # Representation of the maze's structure
-        self.wall_color = self.colors.random_color_wall() # Select a random color for the walls
-        self.background_color = self.colors.random_color_background(self.wall_color) # Select a random color to the background, different form the wall's color
+        self.background_color = self.colors.random_color_background() # Select a random color to the background, different form the wall's color
         self.walls = pygame.sprite.Group() # Create a group of sprites to store tha maze's walls
         self.create_walls_group()  # Create the walls according to the maze's structure
 
