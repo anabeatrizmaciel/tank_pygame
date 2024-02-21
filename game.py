@@ -14,7 +14,7 @@ class Game:
         screen_height = 600
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.color = Color()
-        self.gunshot_sound = pygame.mixer.Sound("assets/sound.mp3")
+        self.gunshot_sound = pygame.mixer.Sound("assets/Sound.wav")
 
 
         self.maze = Maze(screen_width, screen_height, self.color, selected_maze)
@@ -71,7 +71,7 @@ class Game:
 
         # Initialize sprite group for the bonus
         self.bonuses = pygame.sprite.Group()
-        self.next_bonus_time = pygame.time.get_ticks() + 50000  # Time, in milliseconds to the next bonus (30 seconds)
+        self.next_bonus_time = pygame.time.get_ticks() + 10000  # Time, in milliseconds to the next bonus (30 seconds)
         self.tank_hit_timer = 0
         self.tank_hit_duration = 500
         self.quick_rotate_angle = 0
@@ -96,7 +96,7 @@ class Game:
         return None
 
     def show_winner_screen(self, winner_id):
-        self.screen.fill(self.color.BLACK)
+        self.screen.fill((0,0,0))
 
         winner_text = self.font.render(f"Tank {winner_id} Won!", True, (255, 255, 255))
         text_rect = winner_text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
@@ -135,7 +135,7 @@ class Game:
             if current_time >= self.next_bonus_time:
                 self.generate_bonus()
                 # Define next bonus spawn for 30 seconds
-                self.next_bonus_time = current_time + 50000
+                self.next_bonus_time = current_time + 10000
 
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
@@ -170,7 +170,7 @@ class Game:
                 self.show_winner_screen(winner_id)
                 break
 
-            self.screen.fill(self.color.BLACK)
+            self.screen.fill((0,0,0))
             self.maze.draw(self.screen)
             self.bullets.draw(self.screen)
             self.all_sprites.draw(self.screen)

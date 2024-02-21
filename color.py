@@ -2,7 +2,6 @@ import random
 
 class Color:
     def __init__(self):
-        self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
         self.RED = (228, 129, 129)
         self.GREEN = (69, 164, 69)
